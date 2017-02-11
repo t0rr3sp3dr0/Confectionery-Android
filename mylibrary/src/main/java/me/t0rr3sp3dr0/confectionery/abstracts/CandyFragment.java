@@ -19,21 +19,39 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import me.t0rr3sp3dr0.confectionery.singletons.Mailbox;
+import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 
 /**
- * Created by pedro on 2/5/17.
+ * A blank fragment.
+ * <p/>
+ * Activities containing this fragment MUST extend the {@link CandyActivity} class.
+ *
+ * @param <T> the binding class of this activity's layout
+ *
+ * @author Pedro Tôrres
+ * @see CandyActivity
+ * @see Fragment
+ * @see ViewDataBinding
+ * @since 1.0
  */
-
 public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment {
-    protected CandyActivity mListener;
+    protected CandyActivity<? extends ViewDataBinding> mListener;
     private T binding;
     private Map<String, Object> map = new HashMap<>();
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
     public CandyFragment() {
-        // Required empty public constructor
     }
 
+    /**
+     * Use this constructor method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param map A mapping from String keys to various {@link Object} values.
+     */
     public CandyFragment(@NonNull Map<String, Object> map) {
         Bundle args = new Bundle();
 
@@ -43,7 +61,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         String[] keys = new String[map.size()];
         Iterator<String> iterator = map.keySet().iterator();
         for (int i = 0; iterator.hasNext(); i++)
-            Mailbox.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
         args.putStringArray("this$$keys", keys);
 
         setArguments(args);
@@ -60,7 +78,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
             savedInstanceState.remove("this$$keys");
             if (keys != null)
                 for (String key : keys)
-                    map.put(key, Mailbox.getInstance().remove(String.format("%s$$%s", hash, key)));
+                    map.put(key, StringObjectMap.getInstance().remove(String.format("%s$$%s", hash, key)));
         } else if (getArguments() != null) {
             String hash = getArguments().getString("this$$hash");
             getArguments().remove("this$$hash");
@@ -68,13 +86,12 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
             getArguments().remove("this$$keys");
             if (keys != null)
                 for (String key : keys)
-                    map.put(key, Mailbox.getInstance().remove(String.format("%s$$%s", hash, key)));
+                    map.put(key, StringObjectMap.getInstance().remove(String.format("%s$$%s", hash, key)));
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Type superclass = getClass().getGenericSuperclass();
         if (superclass instanceof Class)
             throw new RuntimeException("Missing type parameter.");
@@ -92,17 +109,17 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CandyActivity) {
-            mListener = (CandyActivity) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must extend CandyFragment");
-        }
+
+        if (context instanceof CandyActivity)
+            mListener = (CandyActivity<? extends ViewDataBinding>) context;
+        else
+            throw new RuntimeException(context.toString() + " must extend CandyFragment");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+
         mListener = null;
     }
 
@@ -116,17 +133,17 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         String[] keys = new String[map.size()];
         Iterator<String> iterator = map.keySet().iterator();
         for (int i = 0; iterator.hasNext(); i++)
-            Mailbox.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
         outState.putStringArray("this$$keys", keys);
     }
 
     @NonNull
-    public T getBinding() {
+    public final T getBinding() {
         return binding;
     }
 
     @Nullable
-    public Object getObject(String key) {
+    public final Object getObject(String key) {
         return map.get(key);
     }
 }

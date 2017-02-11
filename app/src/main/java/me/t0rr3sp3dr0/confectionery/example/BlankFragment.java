@@ -1,4 +1,4 @@
-package me.t0rr3sp3dr0.confectionery.examples;
+package me.t0rr3sp3dr0.confectionery.example;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import java.util.Map;
 
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyFragment;
-import me.t0rr3sp3dr0.confectionery.databinding.FragmentBlankBinding;
+import me.t0rr3sp3dr0.confectionery.example.databinding.FragmentBlankBinding;
 
 /**
  * A simple {@link CandyFragment} subclass.
@@ -21,6 +21,7 @@ import me.t0rr3sp3dr0.confectionery.databinding.FragmentBlankBinding;
  * constructor method to create an instance of this fragment.
  */
 public class BlankFragment extends CandyFragment<FragmentBlankBinding> {
+
     public BlankFragment() {
         // Required empty public constructor
     }

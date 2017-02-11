@@ -1,4 +1,4 @@
-package me.t0rr3sp3dr0.confectionery.examples;
+package me.t0rr3sp3dr0.confectionery.example;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,17 +7,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import me.t0rr3sp3dr0.confectionery.R;
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
-import me.t0rr3sp3dr0.confectionery.databinding.ActivityBasicBinding;
-import me.t0rr3sp3dr0.confectionery.examples.dummy.DummyContent;
+import me.t0rr3sp3dr0.confectionery.example.databinding.ActivityBasicBinding;
+import me.t0rr3sp3dr0.confectionery.example.dummy.DummyContent;
 
 public class BasicActivity extends CandyActivity<ActivityBasicBinding> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSupportActionBar(getBinding().toolbar);
 
         getBinding().fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -29,7 +27,7 @@ public class BasicActivity extends CandyActivity<ActivityBasicBinding> {
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_basic);
         if (fragment == null)
-            addFragment(R.id.content_basic, fragment = new ItemFragment(1, DummyContent.ITEMS), true);
+            addFragment(R.id.content_basic, fragment = new ItemFragment(1, DummyContent.ITEMS, true), true);
     }
 
     @Override

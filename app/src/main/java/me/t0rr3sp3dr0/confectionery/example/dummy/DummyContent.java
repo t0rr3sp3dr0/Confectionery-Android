@@ -1,4 +1,4 @@
-package me.t0rr3sp3dr0.confectionery.examples.dummy;
+package me.t0rr3sp3dr0.confectionery.example.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

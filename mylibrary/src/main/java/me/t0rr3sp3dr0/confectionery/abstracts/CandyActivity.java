@@ -1,8 +1,10 @@
 package me.t0rr3sp3dr0.confectionery.abstracts;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
 import android.support.annotation.IdRes;
@@ -12,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.common.base.CaseFormat;
 
@@ -23,28 +26,32 @@ import java.util.Map;
 
 import me.t0rr3sp3dr0.confectionery.interfaces.OnFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnListFragmentInteractionListener;
-import me.t0rr3sp3dr0.confectionery.singletons.Mailbox;
+import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 
 /**
- * Created by pedro on 2/4/17.
+ * A blank activity.
+ * <p/>
+ * Activities containing this fragment MUST extend the {@link CandyActivity} class.
+ *
+ * @param <T> The binding class of this activity's layout
+ *
+ * @author Pedro Tôrres
+ * @see AppCompatActivity
+ * @see ViewDataBinding
+ * @since 1.0
  */
-
 public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompatActivity implements OnFragmentInteractionListener, OnListFragmentInteractionListener {
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Map<String, Object> map = new HashMap<>();
     private T binding;
-    private
     @AnimRes
-    int enter = android.R.anim.slide_in_left;
-    private
+    private int enter = android.R.anim.slide_in_left;
     @AnimRes
-    int exit = android.R.anim.slide_out_right;
-    private
+    private int exit = android.R.anim.slide_out_right;
     @AnimRes
-    int popEnter = android.R.anim.slide_in_left;
-    private
+    private int popEnter = android.R.anim.slide_in_left;
     @AnimRes
-    int popExit = android.R.anim.slide_out_right;
+    private int popExit = android.R.anim.slide_out_right;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,7 +74,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
             savedInstanceState.remove("this$$keys");
             if (keys != null)
                 for (String key : keys)
-                    map.put(key, Mailbox.getInstance().remove(String.format("%s$$%s", hash, key)));
+                    map.put(key, StringObjectMap.getInstance().remove(String.format("%s$$%s", hash, key)));
         } else {
             String hash = getIntent().getStringExtra("this$$hash");
             getIntent().removeExtra("this$$hash");
@@ -75,7 +82,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
             getIntent().removeExtra("this$$keys");
             if (keys != null)
                 for (String key : keys)
-                    map.put(key, Mailbox.getInstance().remove(String.format("%s$$%s", hash, key)));
+                    map.put(key, StringObjectMap.getInstance().remove(String.format("%s$$%s", hash, key)));
         }
     }
 
@@ -89,11 +96,21 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         String[] keys = new String[map.size()];
         Iterator<String> iterator = map.keySet().iterator();
         for (int i = 0; iterator.hasNext(); i++)
-            Mailbox.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
         outState.putStringArray("this$$keys", keys);
     }
 
-    public void startActivity(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, @NonNull Map<String, Object> map) {
+    @Override
+    public void onFragmentInteraction(Uri uri, @Nullable Object object) {
+        Log.d("Confectionery", String.format("%s#onFragmentInteraction(uri: %s, object: %s)", getClass().getName(), uri.toString(), (object != null) ? object.toString() : null));
+    }
+
+    @Override
+    public void onListFragmentInteraction(Class<?> clazz, @NonNull Object object) {
+        Log.d("Confectionery", String.format("%s#onListFragmentInteraction(clazz: %s, object: %s)", getClass().getName(), clazz.toString(), object.toString()));
+    }
+
+    public final void startActivity(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, @NonNull Map<String, Object> map) {
         Intent intent = new Intent(getApplicationContext(), clazz);
 
         String hash = Integer.toString(System.identityHashCode(map));
@@ -102,30 +119,30 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         String[] keys = new String[map.size()];
         Iterator<String> iterator = map.keySet().iterator();
         for (int i = 0; iterator.hasNext(); i++)
-            Mailbox.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
         intent.putExtra("this$$keys", keys);
 
         startActivity(intent);
     }
 
     @NonNull
-    public T getBinding() {
+    public final T getBinding() {
         return binding;
     }
 
     @Nullable
-    public Object getObject(String key) {
+    public final Object getObject(String key) {
         return map.get(key);
     }
 
-    public void setCustomAnimations(@AnimRes int enter, @AnimRes int exit, @AnimRes int popEnter, @AnimRes int popExit) {
+    public final void setCustomAnimations(@AnimRes int enter, @AnimRes int exit, @AnimRes int popEnter, @AnimRes int popExit) {
         this.enter = enter;
         this.exit = exit;
         this.popEnter = popEnter;
         this.popExit = popExit;
     }
 
-    public void addFragment(@IdRes int containerViewId, Fragment fragment, boolean animated) {
+    public final void addFragment(@IdRes int containerViewId, Fragment fragment, boolean animated) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (animated)
             fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
@@ -133,13 +150,42 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         fragmentTransaction.commit();
     }
 
-    public void replaceFragment(@IdRes int containerViewId, Fragment fragment, boolean toBackStack, boolean animated) {
+    @SuppressLint("DefaultLocale")
+    public final void replaceFragment(@IdRes int containerViewId, Fragment fragment, boolean toBackStack, boolean animated) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (toBackStack)
             fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+        else
+            fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         if (animated)
             fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
         fragmentTransaction.replace(containerViewId, fragment);
         fragmentTransaction.commit();
+    }
+
+    public final void restartFragment(@IdRes int containerViewId, boolean animated) {
+        try {
+            Fragment actualFragment = fragmentManager.findFragmentById(containerViewId);
+
+            // Clone actualFragment
+            Fragment cloneFragment = actualFragment.getClass().newInstance();
+            Bundle args = new Bundle();
+            actualFragment.onSaveInstanceState(args);
+            cloneFragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if (animated)
+                fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+            fragmentTransaction.replace(containerViewId, cloneFragment);
+            fragmentTransaction.commit();
+        } catch (InstantiationException | NullPointerException e) {
+            e.printStackTrace();
+
+            Log.e("Confectionery", "It was not possible to restart your fragment!", e);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+
+            Log.e("Confectionery", "It was not possible to restart your fragment!", e);
+        }
     }
 }

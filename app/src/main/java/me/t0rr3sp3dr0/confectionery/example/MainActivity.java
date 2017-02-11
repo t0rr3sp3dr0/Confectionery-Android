@@ -1,4 +1,4 @@
-package me.t0rr3sp3dr0.confectionery.examples;
+package me.t0rr3sp3dr0.confectionery.example;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +16,9 @@ import android.view.View;
 import java.util.HashMap;
 import java.util.Map;
 
-import me.t0rr3sp3dr0.confectionery.R;
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
-import me.t0rr3sp3dr0.confectionery.databinding.ActivityMainBinding;
-import me.t0rr3sp3dr0.confectionery.examples.dummy.DummyContent;
+import me.t0rr3sp3dr0.confectionery.example.databinding.ActivityMainBinding;
+import me.t0rr3sp3dr0.confectionery.example.dummy.DummyContent;
 
 public class MainActivity extends CandyActivity<ActivityMainBinding>
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,7 +32,12 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction("Action", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(EmptyActivity.class, new HashMap<String, Object>());
+                            }
+                        }).show();
             }
         });
 
@@ -50,10 +54,8 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
             map.put("str", "Olá Mundo!");
             addFragment(R.id.content_main, new BlankFragment(map), true);
 
-            Map<String, Object> hashMap = new HashMap<>();
-            hashMap.put("str", "Hello World!");
             //noinspection unchecked
-            replaceFragment(R.id.content_main, new ItemFragment(1, DummyContent.ITEMS, (Map) DummyContent.ITEM_MAP), true, true);
+            replaceFragment(R.id.content_main, new ItemFragment((Map) DummyContent.ITEM_MAP, 1, DummyContent.ITEMS, false), true, true);
         }
     }
 
@@ -82,6 +84,7 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(BasicActivity.class, new HashMap<String, Object>());
             return true;
         }
 

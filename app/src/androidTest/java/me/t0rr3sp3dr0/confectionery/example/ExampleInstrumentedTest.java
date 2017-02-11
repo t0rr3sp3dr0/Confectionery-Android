@@ -1,4 +1,4 @@
-package me.t0rr3sp3dr0.confectionery;
+package me.t0rr3sp3dr0.confectionery.example;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
