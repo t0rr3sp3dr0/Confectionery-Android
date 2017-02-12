@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import me.t0rr3sp3dr0.confectionery.R;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnListFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
@@ -45,13 +46,13 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     private final Map<String, Object> map = new HashMap<>();
     private T binding;
     @AnimRes
-    private int enter = android.R.anim.slide_in_left;
+    private int enter = R.anim.slide_in_right;
     @AnimRes
-    private int exit = android.R.anim.slide_out_right;
+    private int exit = R.anim.slide_out_left;
     @AnimRes
-    private int popEnter = android.R.anim.slide_in_left;
+    private int popEnter = R.anim.slide_in_left;
     @AnimRes
-    private int popExit = android.R.anim.slide_out_right;
+    private int popExit = R.anim.slide_out_right;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

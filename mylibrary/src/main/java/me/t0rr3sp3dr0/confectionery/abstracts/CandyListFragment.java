@@ -21,6 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +47,9 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  */
 public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends ViewDataBinding, E> extends CandyFragment<T1> {
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount;
-    private List<E> mValues;
-    private boolean dividerItemDecoration;
+    private int mColumnCount = 1;
+    private List<E> mValues = new ArrayList<>();
+    private boolean dividerItemDecoration = true;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -202,6 +203,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         this.mColumnCount = columnCount;
     }
 
+    @NonNull
     public final List<E> getValues() {
         return mValues;
     }

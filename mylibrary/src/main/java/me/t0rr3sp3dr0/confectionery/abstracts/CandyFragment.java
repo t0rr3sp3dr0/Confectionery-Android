@@ -103,6 +103,9 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
 
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, layoutId, container, false);
+
+        getActivity().invalidateOptionsMenu();
+
         return binding.getRoot();
     }
 
@@ -121,6 +124,8 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         super.onDetach();
 
         mListener = null;
+
+        getActivity().invalidateOptionsMenu();
     }
 
     @Override
