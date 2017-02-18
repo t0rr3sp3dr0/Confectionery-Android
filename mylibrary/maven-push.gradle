@@ -18,20 +18,18 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 def isReleaseBuild() {
-    return VERSION_NAME.contains("SNAPSHOT") == false
+    return !VERSION_NAME.contains("SNAPSHOT")
 }
 
-def getReleaseRepositoryUrl() {
-    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL
-            : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+def getReleaseRepositoryURL() {
+    return hasProperty('RELEASE_REPOSITORY_URL') ? RELEASE_REPOSITORY_URL : "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
 }
 
-def getSnapshotRepositoryUrl() {
-    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL
-            : "https://oss.sonatype.org/content/repositories/snapshots/"
+def getSnapshotRepositoryURL() {
+    return hasProperty('SNAPSHOT_REPOSITORY_URL') ? SNAPSHOT_REPOSITORY_URL : "https://oss.sonatype.org/content/repositories/snapshots/"
 }
 
-def getRepositoryUsername() {
+def getRepositoryUserName() {
     return hasProperty('NEXUS_USERNAME') ? NEXUS_USERNAME : ""
 }
 
@@ -40,6 +38,32 @@ def getRepositoryPassword() {
 }
 
 afterEvaluate { project ->
+    task javadoc(type: Javadoc) {
+        failOnError false
+        source = android.sourceSets.main.java.sourceFiles
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        classpath += configurations.compile
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.sourceFiles
+    }
+
+    artifacts {
+        archives javadocJar, sourcesJar
+    }
+
+    signing {
+        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
+        sign configurations.archives
+    }
+
     uploadArchives {
         repositories {
             mavenDeployer {
@@ -49,11 +73,12 @@ afterEvaluate { project ->
                 pom.artifactId = POM_ARTIFACT_ID
                 pom.version = VERSION_NAME
 
-                repository(url: getReleaseRepositoryUrl()) {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+                repository(url: getReleaseRepositoryURL()) {
+                    authentication(userName: getRepositoryUserName(), password: getRepositoryPassword())
                 }
-                snapshotRepository(url: getSnapshotRepositoryUrl()) {
-                    authentication(userName: getRepositoryUsername(), password: getRepositoryPassword())
+
+                snapshotRepository(url: getSnapshotRepositoryURL()) {
+                    authentication(userName: getRepositoryUserName(), password: getRepositoryPassword())
                 }
 
                 pom.project {
@@ -63,16 +88,15 @@ afterEvaluate { project ->
                     url POM_URL
 
                     scm {
-                        url POM_SCM_URL
                         connection POM_SCM_CONNECTION
                         developerConnection POM_SCM_DEV_CONNECTION
+                        url POM_SCM_URL
                     }
 
                     licenses {
                         license {
                             name POM_LICENCE_NAME
                             url POM_LICENCE_URL
-                            distribution POM_LICENCE_DIST
                         }
                     }
 
@@ -80,33 +104,11 @@ afterEvaluate { project ->
                         developer {
                             id POM_DEVELOPER_ID
                             name POM_DEVELOPER_NAME
+                            email POM_DEVELOPER_EMAIL
                         }
                     }
                 }
             }
         }
-    }
-
-    signing {
-        required { isReleaseBuild() && gradle.taskGraph.hasTask("uploadArchives") }
-        sign configurations.archives
-    }
-
-    //task androidJavadocs(type: Javadoc) {
-    //source = android.sourceSets.main.allJava
-    //}
-
-    //task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-    //classifier = 'javadoc'
-    //from androidJavadocs.destinationDir
-    //}
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.sourceFiles
-    }
-
-    artifacts {
-        archives androidSourcesJar
     }
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.AnimRes;
@@ -15,6 +16,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
 
 import com.google.common.base.CaseFormat;
 
@@ -25,6 +28,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import me.t0rr3sp3dr0.confectionery.R;
+import me.t0rr3sp3dr0.confectionery.interfaces.DateTimePickerDialogDelegate;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnListFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
@@ -41,7 +45,7 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * @see ViewDataBinding
  * @since 1.0
  */
-public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompatActivity implements OnFragmentInteractionListener, OnListFragmentInteractionListener {
+public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompatActivity implements OnFragmentInteractionListener, OnListFragmentInteractionListener, DateTimePickerDialogDelegate {
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Map<String, Object> map = new HashMap<>();
     private T binding;
@@ -109,6 +113,58 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     @Override
     public void onListFragmentInteraction(Class<?> clazz, @NonNull Object object) {
         Log.d("Confectionery", String.format("%s#onListFragmentInteraction(clazz: %s, object: %s)", getClass().getName(), clazz.toString(), object.toString()));
+    }
+
+    @Nullable
+    @Override
+    public Drawable iconForDateTimePickerDialog() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String titleForDateTimePickerDialog() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public String messageForDateTimePickerDialog() {
+        return null;
+    }
+
+    @NonNull
+    @Override
+    public String textForDateTimePickerDialogPositiveButton() {
+        return getString(android.R.string.ok);
+    }
+
+    @NonNull
+    @Override
+    public String textForDateTimePickerDialogNegativeButton() {
+        return getString(android.R.string.cancel);
+    }
+
+    @NonNull
+    @Override
+    public String textForDateTimePickerDialogDateButton() {
+        return "Date";
+    }
+
+    @NonNull
+    @Override
+    public String textForDateTimePickerDialogTimeButton() {
+        return "Time";
+    }
+
+    @Override
+    public void onShowDateTimePickerDialog(@NonNull DatePicker datePicker, @NonNull TimePicker timePicker) {
+
+    }
+
+    @Override
+    public void onDateTimePickerDialogCompletion(@NonNull DatePicker datePicker, @NonNull TimePicker timePicker) {
+        Log.d("Confectionery", String.format("%s#onListFragmentInteraction -> %04d-%02d-%02dT%02d:%02dZ", getClass().getName(), datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour(), timePicker.getCurrentMinute()));
     }
 
     public final void startActivity(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, @NonNull Map<String, Object> map) {

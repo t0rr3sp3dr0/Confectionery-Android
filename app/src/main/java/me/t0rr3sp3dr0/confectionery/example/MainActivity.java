@@ -19,6 +19,7 @@ import java.util.Map;
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
 import me.t0rr3sp3dr0.confectionery.example.databinding.ActivityMainBinding;
 import me.t0rr3sp3dr0.confectionery.example.dummy.DummyContent;
+import me.t0rr3sp3dr0.confectionery.utilities.DateTimePickerDialogFragment;
 
 public class MainActivity extends CandyActivity<ActivityMainBinding>
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +36,8 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
                         .setAction("Action", new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                startActivity(EmptyActivity.class, new HashMap<String, Object>());
+//                                startActivity(EmptyActivity.class, new HashMap<String, Object>());
+                                new DateTimePickerDialogFragment().show(getSupportFragmentManager(), "DateTimePickerDialogFragment<MyAdapter>");
                             }
                         }).show();
             }
