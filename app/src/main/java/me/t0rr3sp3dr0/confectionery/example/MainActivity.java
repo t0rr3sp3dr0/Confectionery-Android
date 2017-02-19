@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.NumberPicker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ import java.util.Map;
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
 import me.t0rr3sp3dr0.confectionery.example.databinding.ActivityMainBinding;
 import me.t0rr3sp3dr0.confectionery.example.dummy.DummyContent;
-import me.t0rr3sp3dr0.confectionery.utilities.DateTimePickerDialogFragment;
+import me.t0rr3sp3dr0.confectionery.utilities.NumberPickerDialog;
 
 public class MainActivity extends CandyActivity<ActivityMainBinding>
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -37,7 +38,12 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
                             @Override
                             public void onClick(View v) {
 //                                startActivity(EmptyActivity.class, new HashMap<String, Object>());
-                                new DateTimePickerDialogFragment().show(getSupportFragmentManager(), "DateTimePickerDialogFragment<MyAdapter>");
+                                new NumberPickerDialog(MainActivity.this, new NumberPickerDialog.OnValueSetListener() {
+                                    @Override
+                                    public void onNumberSet(NumberPicker view, int value) {
+                                        Log.d("NumberPickerDialog", Integer.toString(value));
+                                    }
+                                }, 5, 0, Byte.MAX_VALUE).show();
                             }
                         }).show();
             }
