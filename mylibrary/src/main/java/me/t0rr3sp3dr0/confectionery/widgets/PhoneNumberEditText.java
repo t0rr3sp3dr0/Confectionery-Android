@@ -43,14 +43,12 @@ public class PhoneNumberEditText extends EditText {
 
         a.recycle();
 
-        try {
-            addTextChangedListener(new PhoneNumberFormattingTextWatcher(this.regionCode));
-            setInputType(InputType.TYPE_CLASS_PHONE);
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
+        setInputType(InputType.TYPE_CLASS_PHONE);
 
-            // Fix Rendering Problems
-        }
+        if (!isInEditMode())
+            addTextChangedListener(new PhoneNumberFormattingTextWatcher(this.regionCode));
+        else
+            setHint("+55 81 99999-9999");
     }
 
     public String getRegionCode() {
