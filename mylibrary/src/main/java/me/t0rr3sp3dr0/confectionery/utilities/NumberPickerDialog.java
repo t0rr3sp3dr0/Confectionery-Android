@@ -15,9 +15,11 @@ import android.widget.NumberPicker;
 import me.t0rr3sp3dr0.confectionery.R;
 
 /**
- * Created by pedro on 2/18/17.
+ * A simple dialog containing an {@link android.widget.NumberPicker}.
+ *
+ * @author Pedro Tôrres
+ * @since 0.0.2
  */
-
 public class NumberPickerDialog extends AlertDialog implements DialogInterface.OnClickListener, NumberPicker.OnValueChangeListener {
     private static final String VALUE = "value";
     private static final String MIN_VALUE = "minValue";
@@ -25,18 +27,54 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
     private final NumberPicker mNumberPicker;
     private OnValueSetListener mValueSetListener;
 
+    /**
+     * Creates a new number picker dialog using the parent context's default
+     * alert dialog theme.
+     *
+     * @param context the parent context
+     */
     public NumberPickerDialog(@NonNull Context context) {
         this(context, 0, null, 0, 0, Integer.MAX_VALUE - 1);
     }
 
+    /**
+     * Creates a new number picker dialog.
+     *
+     * @param context    the parent context
+     * @param themeResId the resource ID of the theme against which to inflate
+     *                   this dialog, or {@code 0} to use the parent
+     *                   {@code context}'s default alert dialog theme
+     */
     public NumberPickerDialog(@NonNull Context context, @StyleRes int themeResId) {
         this(context, themeResId, null, 0, 0, Integer.MAX_VALUE - 1);
     }
 
+    /**
+     * Creates a new date number dialog with the specified values using the
+     * parent context's default alert dialog theme.
+     *
+     * @param context  the parent context
+     * @param listener the listener to call when the user sets the date
+     * @param value    the initially selected value
+     * @param minValue the initially minimum value
+     * @param maxValue the initially maximum value
+     */
     public NumberPickerDialog(@NonNull Context context, @Nullable OnValueSetListener listener, int value, int minValue, int maxValue) {
         this(context, 0, listener, value, minValue, maxValue);
     }
 
+    /**
+     * Creates a new date number dialog with the specified values.
+     *
+     * @param context    the parent context
+     * @param themeResId the resource ID of the theme against which to inflate
+     *                   this dialog, or {@code 0} to use the parent
+     *                   {@code context}'s default alert dialog theme
+     * @param listener   the listener to call when the user sets the date
+     * @param value      the initially selected value
+     * @param minValue   the initially minimum value
+     * @param maxValue   the initially maximum value
+     */
     public NumberPickerDialog(@NonNull Context context, @StyleRes int themeResId, @Nullable OnValueSetListener listener, int value, int minValue, int maxValue) {
         super(context, resolveDialogTheme(context, themeResId));
 
