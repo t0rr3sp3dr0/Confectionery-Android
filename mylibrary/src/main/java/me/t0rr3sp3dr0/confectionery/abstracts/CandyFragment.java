@@ -1,9 +1,12 @@
 package me.t0rr3sp3dr0.confectionery.abstracts;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.annotation.AnimRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -150,5 +153,51 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     @Nullable
     public final Object getObject(String key) {
         return map.get(key);
+    }
+
+    public final void startActivity(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, @NonNull Map<String, Object> map) {
+        Intent intent = new Intent(getContext(), clazz);
+
+        String hash = Integer.toString(System.identityHashCode(map));
+        intent.putExtra("this$$hash", hash);
+
+        String[] keys = new String[map.size()];
+        Iterator<String> iterator = map.keySet().iterator();
+        for (int i = 0; iterator.hasNext(); i++)
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+        intent.putExtra("this$$keys", keys);
+
+        startActivity(intent);
+    }
+
+    public final void startActivityForResult(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, int requestCode, @NonNull Map<String, Object> map) {
+        Intent intent = new Intent(getContext(), clazz);
+
+        String hash = Integer.toString(System.identityHashCode(map));
+        intent.putExtra("this$$hash", hash);
+
+        String[] keys = new String[map.size()];
+        Iterator<String> iterator = map.keySet().iterator();
+        for (int i = 0; iterator.hasNext(); i++)
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+        intent.putExtra("this$$keys", keys);
+
+        startActivityForResult(intent, requestCode);
+    }
+
+    public final void setCustomAnimations(@AnimRes int enter, @AnimRes int exit, @AnimRes int popEnter, @AnimRes int popExit) {
+        ((CandyActivity) getActivity()).setCustomAnimations(enter, exit, popEnter, popExit);
+    }
+
+    public final void addFragment(@IdRes int containerViewId, Fragment fragment, boolean animated) {
+        ((CandyActivity) getActivity()).addFragment(containerViewId, fragment, animated);
+    }
+
+    public final void replaceFragment(@IdRes int containerViewId, Fragment fragment, boolean toBackStack, boolean animated) {
+        ((CandyActivity) getActivity()).replaceFragment(containerViewId, fragment, toBackStack, animated);
+    }
+
+    public final void restartFragment(@IdRes int containerViewId, boolean animated) {
+        ((CandyActivity) getActivity()).restartFragment(containerViewId, animated);
     }
 }

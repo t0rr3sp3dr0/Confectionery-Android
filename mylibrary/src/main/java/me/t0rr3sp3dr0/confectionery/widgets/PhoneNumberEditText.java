@@ -23,11 +23,11 @@ public class PhoneNumberEditText extends EditText {
     private String regionCode;
 
     public PhoneNumberEditText(Context context) {
-        this(context, null, android.R.attr.editTextStyle);
+        this(context, null, R.attr.editTextStyle);
     }
 
     public PhoneNumberEditText(Context context, AttributeSet attrs) {
-        this(context, attrs, android.R.attr.editTextStyle);
+        this(context, attrs, R.attr.editTextStyle);
     }
 
     public PhoneNumberEditText(Context context, AttributeSet attrs, int defStyleAttr) {

@@ -126,6 +126,21 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         startActivity(intent);
     }
 
+    public final void startActivityForResult(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, int requestCode, @NonNull Map<String, Object> map) {
+        Intent intent = new Intent(getApplicationContext(), clazz);
+
+        String hash = Integer.toString(System.identityHashCode(map));
+        intent.putExtra("this$$hash", hash);
+
+        String[] keys = new String[map.size()];
+        Iterator<String> iterator = map.keySet().iterator();
+        for (int i = 0; iterator.hasNext(); i++)
+            StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
+        intent.putExtra("this$$keys", keys);
+
+        startActivityForResult(intent, requestCode);
+    }
+
     @NonNull
     public final T getBinding() {
         return binding;
