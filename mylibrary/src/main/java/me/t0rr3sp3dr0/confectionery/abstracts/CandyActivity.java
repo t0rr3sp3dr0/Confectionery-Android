@@ -35,7 +35,6 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * Activities containing this fragment MUST extend the {@link CandyActivity} class.
  *
  * @param <T> The binding class of this activity's layout
- *
  * @author Pedro Tôrres
  * @see AppCompatActivity
  * @see ViewDataBinding
@@ -58,15 +57,21 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Type superclass = getClass().getGenericSuperclass();
-        if (superclass instanceof Class)
-            throw new RuntimeException("Missing type parameter.");
-        final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
+        try {
+            Type superclass = getClass().getGenericSuperclass();
+            if (superclass instanceof Class)
+                throw new RuntimeException("Missing type parameter.");
+            final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
 
-        String typeName = type.toString();
-        String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
-        int layoutId = getResources().getIdentifier(layoutName, "layout", getPackageName());
-        binding = DataBindingUtil.setContentView(this, layoutId);
+            String typeName = type.toString();
+            String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
+            int layoutId = getResources().getIdentifier(layoutName, "layout", getPackageName());
+            binding = DataBindingUtil.setContentView(this, layoutId);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+
+            binding = DataBindingUtil.setContentView(this, R.layout.empty);
+        }
 
         if (savedInstanceState != null) {
             String hash = savedInstanceState.getString("this$$hash");

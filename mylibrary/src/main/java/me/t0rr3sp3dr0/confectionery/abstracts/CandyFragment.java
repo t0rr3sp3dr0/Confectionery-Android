@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import me.t0rr3sp3dr0.confectionery.R;
 import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 
 /**
@@ -30,7 +31,6 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * Activities containing this fragment MUST extend the {@link CandyActivity} class.
  *
  * @param <T> the binding class of this activity's layout
- *
  * @author Pedro Tôrres
  * @see CandyActivity
  * @see Fragment
@@ -95,17 +95,24 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Type superclass = getClass().getGenericSuperclass();
-        if (superclass instanceof Class)
-            throw new RuntimeException("Missing type parameter.");
-        final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
+        try {
+            Type superclass = getClass().getGenericSuperclass();
+            if (superclass instanceof Class)
+                throw new RuntimeException("Missing type parameter.");
+            final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
 
-        String typeName = type.toString();
-        String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
-        int layoutId = getResources().getIdentifier(layoutName, "layout", getContext().getPackageName());
+            String typeName = type.toString();
+            String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
+            int layoutId = getResources().getIdentifier(layoutName, "layout", getContext().getPackageName());
 
-        // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, layoutId, container, false);
+            // Inflate the layout for this fragment
+            binding = DataBindingUtil.inflate(inflater, layoutId, container, false);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+
+            // Inflate the layout for this fragment
+            binding = DataBindingUtil.inflate(inflater, R.layout.empty, container, false);
+        }
 
         getActivity().invalidateOptionsMenu();
 
