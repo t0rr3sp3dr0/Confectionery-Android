@@ -5,35 +5,9 @@
     tools:context="me.t0rr3sp3dr0.confectionery.example.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/content_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp" />
-
-        <me.t0rr3sp3dr0.confectionery.widgets.PhoneNumberEditText
-            android:id="@+id/phoneNumberEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/editText"
-            android:layout_margin="16dp" />
-
-        <com.github.pinball83.maskededittext.MaskedEditText
-            android:id="@+id/masked"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/phoneNumberEditText"
-            android:layout_margin="16dp"
-            android:inputType="number"
-            app:mask="8 (***) *** **-**"
-            app:maskIcon="@android:drawable/ic_secure"
-            app:maskIconColor="@color/colorPrimary"
-            app:notMaskedSymbol="*" />
-    </RelativeLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 </layout>

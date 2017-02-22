@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
@@ -14,9 +15,11 @@ import android.view.View;
 import android.widget.NumberPicker;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
 import me.t0rr3sp3dr0.confectionery.example.databinding.ActivityMainBinding;
+import me.t0rr3sp3dr0.confectionery.example.dummy.DummyContent;
 import me.t0rr3sp3dr0.confectionery.utilities.NumberPickerDialog;
 
 public class MainActivity extends CandyActivity<ActivityMainBinding>
@@ -53,15 +56,15 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
 
         getBinding().navView.setNavigationItemSelectedListener(this);
 
-//        Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
-//        if (fragment == null) {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("str", "Olá Mundo!");
-//            addFragment(R.id.content_main, new BlankFragment(map), true);
-//
-//            //noinspection unchecked
-//            replaceFragment(R.id.content_main, new ItemFragment((Map) DummyContent.ITEM_MAP, 1, DummyContent.ITEMS, false), true, true);
-//        }
+        Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
+        if (fragment == null) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("str", "Olá Mundo!");
+            addFragment(R.id.content_main, new BlankFragment(map), true);
+
+            //noinspection unchecked
+            replaceFragment(R.id.content_main, new ItemFragment((Map) DummyContent.ITEM_MAP, 1, DummyContent.ITEMS, false), true, true);
+        }
     }
 
     @Override
