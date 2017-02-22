@@ -56,7 +56,8 @@ afterEvaluate { project ->
     }
 
     artifacts {
-        archives javadocJar, sourcesJar
+        archives javadocJar
+        archives sourcesJar
     }
 
     signing {
