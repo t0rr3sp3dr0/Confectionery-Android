@@ -7,6 +7,7 @@ import java.util.HashMap;
  * activities and fragments, even if the objects are not serializable.
  *
  * @author Pedro Tôrres
+ * @since 0.0.1
  */
 public final class StringObjectMap extends HashMap<String, Object> {
     private static StringObjectMap ourInstance = new StringObjectMap();

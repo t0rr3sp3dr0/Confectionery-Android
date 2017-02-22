@@ -4,6 +4,7 @@ import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.widget.TextView;
 
 import com.google.i18n.phonenumbers.AsYouTypeFormatter;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
@@ -11,7 +12,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import java.util.Locale;
 
 /**
- * Watches a {@link android.widget.TextView} and if a phone number is entered
+ * Watches a {@link TextView} and if a phone number is entered
  * will format it.
  * <p>
  * Stop formatting when the user

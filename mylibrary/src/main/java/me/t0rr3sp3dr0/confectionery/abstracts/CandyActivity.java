@@ -38,7 +38,7 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * @author Pedro Tôrres
  * @see AppCompatActivity
  * @see ViewDataBinding
- * @since 1.0
+ * @since 0.0.1
  */
 public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompatActivity implements OnFragmentInteractionListener, OnListFragmentInteractionListener {
     public final FragmentManager fragmentManager = getSupportFragmentManager();

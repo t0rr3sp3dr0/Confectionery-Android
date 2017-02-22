@@ -43,4 +43,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
 
     compile project(':mylibrary')
+
+    compile 'com.github.pinball83:masked-edittext:1.0.3'
 }

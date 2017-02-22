@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
  * activity.
  *
  * @author Pedro Tôrres
+ * @since 0.0.1
  */
 public interface OnListFragmentInteractionListener {
     void onListFragmentInteraction(Class<?> clazz, @NonNull Object object);

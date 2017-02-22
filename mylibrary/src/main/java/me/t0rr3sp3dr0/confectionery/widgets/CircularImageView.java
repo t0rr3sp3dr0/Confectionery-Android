@@ -10,24 +10,34 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+
 /**
- * Created by SergioTorres on 11/02/17.
+ * A {@link ImageView} that scales the image uniformly (maintain the image's
+ * aspect ratio) so that both dimensions (width and height) of the image will
+ * be equal to or larger than the corresponding dimension of the view (minus
+ * padding), crops it in circle shape, then finally scales the image uniformly
+ * (maintain the image's aspect ratio) so that both dimensions (width and
+ * height) of the image will be equal to or less than the corresponding
+ * dimension of the view (minus padding).
+ *
+ * @author Pedro Tôrres
+ * @since 0.0.2
  */
+public class CircularImageView extends AppCompatImageView {
 
-public class RoundedImageView extends ImageView {
-
-    public RoundedImageView(Context context) {
+    public CircularImageView(Context context) {
         super(context);
     }
 
-    public RoundedImageView(Context context, AttributeSet attrs) {
+    public CircularImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RoundedImageView(Context context, AttributeSet attrs, int defStyle) {
+    public CircularImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

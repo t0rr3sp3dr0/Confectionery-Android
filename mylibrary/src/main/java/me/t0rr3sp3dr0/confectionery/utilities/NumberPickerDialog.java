@@ -15,7 +15,7 @@ import android.widget.NumberPicker;
 import me.t0rr3sp3dr0.confectionery.R;
 
 /**
- * A simple dialog containing an {@link android.widget.NumberPicker}.
+ * A simple dialog containing an {@link NumberPicker}.
  *
  * @author Pedro Tôrres
  * @since 0.0.2

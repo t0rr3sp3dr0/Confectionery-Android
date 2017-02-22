@@ -43,7 +43,7 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * @see CandyFragment
  * @see RecyclerView
  * @see ViewDataBinding
- * @since 1.0
+ * @since 0.0.1
  */
 public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends ViewDataBinding, E> extends CandyFragment<T1> {
     private static final String ARG_COLUMN_COUNT = "column-count";

@@ -35,7 +35,7 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * @see CandyActivity
  * @see Fragment
  * @see ViewDataBinding
- * @since 1.0
+ * @since 0.0.1
  */
 public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment {
     protected CandyActivity<? extends ViewDataBinding> mListener;
