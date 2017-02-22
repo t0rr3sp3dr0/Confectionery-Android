@@ -45,6 +45,7 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * @see ViewDataBinding
  * @since 0.0.1
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends ViewDataBinding, E> extends CandyFragment<T1> {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
@@ -114,6 +115,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         getArguments().putBoolean("this$$dividerItemDecoration", dividerItemDecoration);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +143,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
@@ -154,6 +161,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         return view;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -192,6 +202,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
      * @param position The position of the item within the adapter's data set.
      * @param payloads A non-null list of payloads.
      */
+    @SuppressWarnings("EmptyMethod")
     public void onBindViewHolder(final CandyItemRecyclerViewAdapter.ViewHolder holder, int position, @NonNull List<E> payloads) {
     }
 
@@ -235,6 +246,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
             // Package local constructor to avoid class instantiation outside this module
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Type superclass = CandyListFragment.this.getClass().getGenericSuperclass();
@@ -250,6 +264,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
             return new ViewHolder(binding);
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.setItem(mValues.get(position));
@@ -257,12 +274,14 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
             CandyListFragment.this.onBindViewHolder(holder, position, Collections.unmodifiableList(mValues));
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public int getItemCount() {
             return mValues.size();
         }
 
-        @SuppressWarnings("WeakerAccess")
         public final class ViewHolder extends RecyclerView.ViewHolder {
             private final T2 binding;
             private final View mView;
@@ -281,6 +300,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
                 });
             }
 
+            /**
+             * {@inheritDoc}
+             */
             @Override
             public String toString() {
                 return super.toString() + " '" + mItem.toString() + "'";
@@ -290,6 +312,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
                 return mItem;
             }
 
+            @SuppressWarnings("TryWithIdenticalCatches")
             public void setItem(E mItem) {
                 this.mItem = mItem;
 

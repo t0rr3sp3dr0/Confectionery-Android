@@ -23,6 +23,7 @@ import java.util.Locale;
  * <p>
  * The formatting will be restarted once the text is cleared.
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class PhoneNumberFormattingTextWatcher implements TextWatcher {
 
     /**
@@ -56,6 +57,9 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
         mFormatter = PhoneNumberUtil.getInstance().getAsYouTypeFormatter(countryCode);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count,
                                   int after) {
@@ -68,6 +72,9 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (mSelfChange || mStopFormatting) {
@@ -79,6 +86,9 @@ public class PhoneNumberFormattingTextWatcher implements TextWatcher {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void afterTextChanged(Editable s) {
         if (mStopFormatting) {

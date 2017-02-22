@@ -1,5 +1,6 @@
 package me.t0rr3sp3dr0.confectionery.utilities;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import me.t0rr3sp3dr0.confectionery.R;
  * @author Pedro Tôrres
  * @since 0.0.2
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class NumberPickerDialog extends AlertDialog implements DialogInterface.OnClickListener, NumberPicker.OnValueChangeListener {
     private static final String VALUE = "value";
     private static final String MIN_VALUE = "minValue";
@@ -80,7 +82,7 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
 
         final Context themeContext = getContext();
         final LayoutInflater inflater = LayoutInflater.from(themeContext);
-        final View view = inflater.inflate(R.layout.number_picker_dialog, null);
+        @SuppressLint("InflateParams") final View view = inflater.inflate(R.layout.number_picker_dialog, null);
         setView(view);
 
         setButton(BUTTON_POSITIVE, themeContext.getString(android.R.string.ok), this);
@@ -107,6 +109,9 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @NonNull
     @Override
     public Bundle onSaveInstanceState() {
@@ -119,6 +124,9 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
         return state;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -133,6 +141,9 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
         mNumberPicker.setOnValueChangedListener(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
@@ -154,6 +165,9 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
         mNumberPicker.setValue(newVal);

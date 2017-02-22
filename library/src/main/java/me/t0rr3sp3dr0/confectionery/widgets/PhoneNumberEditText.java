@@ -22,9 +22,10 @@ import me.t0rr3sp3dr0.confectionery.utilities.PhoneNumberFormattingTextWatcher;
  * @author Pedro Tôrres
  * @since 0.0.2
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class PhoneNumberEditText extends AppCompatEditText {
     private final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-    private String regionCode;
+    private final String regionCode;
 
     public PhoneNumberEditText(Context context) {
         this(context, null, R.attr.editTextStyle);

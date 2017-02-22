@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @since 0.0.1
  */
 public final class StringObjectMap extends HashMap<String, Object> {
-    private static StringObjectMap ourInstance = new StringObjectMap();
+    private static final StringObjectMap ourInstance = new StringObjectMap();
 
     private StringObjectMap() {
         // Required private constructor

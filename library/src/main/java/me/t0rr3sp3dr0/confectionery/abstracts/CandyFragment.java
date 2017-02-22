@@ -30,17 +30,18 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * <p/>
  * Activities containing this fragment MUST extend the {@link CandyActivity} class.
  *
- * @param <T> the binding class of this activity's layout
+ * @param <T> The binding class of the layout inflated by this fragment
  * @author Pedro Tôrres
  * @see CandyActivity
  * @see Fragment
  * @see ViewDataBinding
  * @since 0.0.1
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment {
+    private final Map<String, Object> map = new HashMap<>();
     protected CandyActivity<? extends ViewDataBinding> mListener;
     private T binding;
-    private Map<String, Object> map = new HashMap<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -70,6 +71,9 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         setArguments(args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,6 +97,9 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
@@ -119,6 +126,9 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         return binding.getRoot();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -129,6 +139,9 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
             throw new RuntimeException(context.toString() + " must extend CandyFragment");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -138,6 +151,9 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
         getActivity().invalidateOptionsMenu();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

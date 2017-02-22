@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
  * @author Pedro Tôrres
  * @since 0.0.1
  */
+@SuppressWarnings("unused")
 public interface OnListFragmentInteractionListener {
     void onListFragmentInteraction(Class<?> clazz, @NonNull Object object);
 }

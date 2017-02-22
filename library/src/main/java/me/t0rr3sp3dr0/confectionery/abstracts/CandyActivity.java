@@ -40,6 +40,7 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
  * @see ViewDataBinding
  * @since 0.0.1
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompatActivity implements OnFragmentInteractionListener, OnListFragmentInteractionListener {
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Map<String, Object> map = new HashMap<>();
@@ -53,6 +54,9 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     @AnimRes
     private int popExit = R.anim.slide_out_right;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +96,9 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -106,11 +113,17 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         outState.putStringArray("this$$keys", keys);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onFragmentInteraction(Uri uri, @Nullable Object object) {
         Log.d("Confectionery", String.format("%s#onFragmentInteraction(uri: %s, object: %s)", getClass().getName(), uri.toString(), (object != null) ? object.toString() : null));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void onListFragmentInteraction(Class<?> clazz, @NonNull Object object) {
         Log.d("Confectionery", String.format("%s#onListFragmentInteraction(clazz: %s, object: %s)", getClass().getName(), clazz.toString(), object.toString()));
@@ -184,6 +197,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         fragmentTransaction.commit();
     }
 
+    @SuppressWarnings("TryWithIdenticalCatches")
     public final void restartFragment(@IdRes int containerViewId, boolean animated) {
         try {
             Fragment actualFragment = fragmentManager.findFragmentById(containerViewId);

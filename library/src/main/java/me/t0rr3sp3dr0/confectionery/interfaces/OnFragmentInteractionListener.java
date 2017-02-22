@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
  * @author Pedro Tôrres
  * @since 0.0.1
  */
+@SuppressWarnings("unused")
 public interface OnFragmentInteractionListener {
     void onFragmentInteraction(Uri uri, @Nullable Object object);
 }

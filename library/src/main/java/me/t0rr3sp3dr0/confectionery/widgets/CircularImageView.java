@@ -27,6 +27,7 @@ import android.widget.ImageView;
  * @author Pedro Tôrres
  * @since 0.0.2
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class CircularImageView extends AppCompatImageView {
 
     public CircularImageView(Context context) {
@@ -41,6 +42,9 @@ public class CircularImageView extends AppCompatImageView {
         super(context, attrs, defStyle);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void onDraw(Canvas canvas) {
         Drawable drawable = getDrawable();
