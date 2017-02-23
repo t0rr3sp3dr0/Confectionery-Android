@@ -6,6 +6,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.common.base.CaseFormat;
+import com.google.common.base.Predicate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -49,8 +51,15 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends ViewDataBinding, E> extends CandyFragment<T1> {
     private static final String ARG_COLUMN_COUNT = "column-count";
     private int mColumnCount = 1;
-    private List<E> mValues = new ArrayList<>();
     private boolean dividerItemDecoration = true;
+    private List<E> mDataSet = new ArrayList<>();
+    private List<E> mFilteredDataSet = new ArrayList<>(mDataSet);
+    private Predicate<E> mPredicate = new Predicate<E>() {
+        @Override
+        public boolean apply(E input) {
+            return true;
+        }
+    };
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -85,8 +94,8 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         args.putInt(ARG_COLUMN_COUNT, columnCount);
 
         String hash = Integer.toString(System.identityHashCode(values));
-        args.putString("this$$list", hash);
-        StringObjectMap.getInstance().put(String.format("%s$$list", hash), values);
+        args.putString("this$$dataSet", hash);
+        StringObjectMap.getInstance().put(String.format("%s$$dataSet", hash), values);
 
         args.putBoolean("this$$dividerItemDecoration", dividerItemDecoration);
 
@@ -109,8 +118,8 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         getArguments().putInt(ARG_COLUMN_COUNT, columnCount);
 
         String hash = Integer.toString(System.identityHashCode(values));
-        getArguments().putString("this$$list", hash);
-        StringObjectMap.getInstance().put(String.format("%s$$list", hash), values);
+        getArguments().putString("this$$dataSet", hash);
+        StringObjectMap.getInstance().put(String.format("%s$$dataSet", hash), values);
 
         getArguments().putBoolean("this$$dividerItemDecoration", dividerItemDecoration);
     }
@@ -118,6 +127,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,19 +135,25 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         if (savedInstanceState != null) {
             mColumnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
 
-            String hash = savedInstanceState.getString("this$$list");
-            savedInstanceState.remove("this$$list");
-            //noinspection unchecked
-            mValues = (List<E>) StringObjectMap.getInstance().remove(String.format("%s$$list", hash));
+            String dataSetHash = savedInstanceState.getString("this$$dataSet");
+            savedInstanceState.remove("this$$dataSet");
+            mDataSet = (List<E>) StringObjectMap.getInstance().remove(String.format("%s$$dataSet", dataSetHash));
+
+            String predicateHash = savedInstanceState.getString("this$$predicate");
+            savedInstanceState.remove("this$$predicate");
+            filterDataSet((Predicate<E>) StringObjectMap.getInstance().remove(String.format("%s$$predicate", predicateHash)));
 
             dividerItemDecoration = savedInstanceState.getBoolean("this$$dividerItemDecoration");
         } else if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
 
-            String hash = getArguments().getString("this$$list");
-            getArguments().remove("this$$list");
-            //noinspection unchecked
-            mValues = (List<E>) StringObjectMap.getInstance().remove(String.format("%s$$list", hash));
+            String dataSetHash = getArguments().getString("this$$dataSet");
+            getArguments().remove("this$$dataSet");
+            mDataSet = (List<E>) StringObjectMap.getInstance().remove(String.format("%s$$dataSet", dataSetHash));
+
+            String predicateHash = getArguments().getString("this$$predicate");
+            getArguments().remove("this$$predicate");
+            filterDataSet((Predicate<E>) StringObjectMap.getInstance().remove(String.format("%s$$predicate", predicateHash)));
 
             dividerItemDecoration = getArguments().getBoolean("this$$dividerItemDecoration");
         }
@@ -151,12 +167,12 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
         if (view instanceof RecyclerView) {
-            if (mValues != null) {
-                reloadData((RecyclerView) view);
+            if (mDataSet != null) {
+                setupRecyclerView((RecyclerView) view);
             } else
-                Log.w("Confectionery", "Your data source is null! Please override CandyListFragment#onCreateView and invoke, before super, CandyListFragment#setValues with your nonnull data source.");
+                Log.w("Confectionery", "Your data source is null! Please override CandyListFragment#onCreateView and invoke, before super, CandyListFragment#setDataSet with your nonnull data source.");
         } else
-            Log.w("Confectionery", "Your root view is not instanceof RecyclerView! Please override CandyListFragment#onCreateView and invoke, after super, CandyListFragment#reloadData with the correct RecyclerView.");
+            Log.w("Confectionery", "Your root view is not instanceof RecyclerView! Please override CandyListFragment#onCreateView and invoke, after super, CandyListFragment#setupRecyclerView with the correct RecyclerView.");
 
         return view;
     }
@@ -170,9 +186,13 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
         outState.putInt(ARG_COLUMN_COUNT, mColumnCount);
 
-        String hash = Integer.toString(System.identityHashCode(mValues));
-        outState.putString("this$$list", hash);
-        StringObjectMap.getInstance().put(String.format("%s$$list", hash), mValues);
+        String dataSetHash = Integer.toString(System.identityHashCode(mDataSet));
+        outState.putString("this$$dataSet", dataSetHash);
+        StringObjectMap.getInstance().put(String.format("%s$$dataSet", dataSetHash), mDataSet);
+
+        String predicateHash = Integer.toString(System.identityHashCode(mPredicate));
+        outState.putString("this$$predicate", predicateHash);
+        StringObjectMap.getInstance().put(String.format("%s$$predicate", predicateHash), mPredicate);
 
         outState.putBoolean("this$$dividerItemDecoration", dividerItemDecoration);
     }
@@ -215,15 +235,21 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
     }
 
     @NonNull
-    public final List<E> getValues() {
-        return mValues;
+    public final List<E> getDataSet() {
+        return mDataSet;
     }
 
-    public final void setValues(@NonNull List<E> values) {
-        this.mValues = values;
+    public final void setDataSet(@NonNull List<E> values) {
+        this.mDataSet = values;
+        filterDataSet(mPredicate);
     }
 
-    public final void reloadData(RecyclerView recyclerView) {
+    @NonNull
+    public final List<E> getFilteredDataSet() {
+        return mFilteredDataSet;
+    }
+
+    public final void setupRecyclerView(@NonNull RecyclerView recyclerView) {
         // Set the adapter
         Context context = recyclerView.getContext();
         if (mColumnCount <= 1)
@@ -234,6 +260,30 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
         if (dividerItemDecoration)
             recyclerView.addItemDecoration(new DividerItemDecoration(context, ((LinearLayoutManager) recyclerView.getLayoutManager()).getOrientation()));
+    }
+
+    @NonNull
+    public final Predicate<E> getPredicate() {
+        return mPredicate;
+    }
+
+    public final void filterDataSet(@Nullable Predicate<E> predicate) {
+        mPredicate = predicate != null ? predicate : new Predicate<E>() {
+            @Override
+            public boolean apply(E input) {
+                return true;
+            }
+        };
+
+        mFilteredDataSet.clear();
+
+        for (E e : mDataSet)
+            if (mPredicate.apply(e))
+                mFilteredDataSet.add(e);
+    }
+
+    public final void notifyDataSetChanged(RecyclerView recyclerView) {
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     /**
@@ -269,9 +319,9 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
          */
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.setItem(mValues.get(position));
+            holder.setItem(mFilteredDataSet.get(position));
 
-            CandyListFragment.this.onBindViewHolder(holder, position, Collections.unmodifiableList(mValues));
+            CandyListFragment.this.onBindViewHolder(holder, position, Collections.unmodifiableList(mFilteredDataSet));
         }
 
         /**
@@ -279,7 +329,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
          */
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return mFilteredDataSet.size();
         }
 
         public final class ViewHolder extends RecyclerView.ViewHolder {

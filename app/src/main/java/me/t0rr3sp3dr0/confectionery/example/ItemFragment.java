@@ -1,9 +1,15 @@
 package me.t0rr3sp3dr0.confectionery.example;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.google.common.base.Predicate;
 
 import java.util.List;
 import java.util.Map;
@@ -66,5 +72,19 @@ public class ItemFragment extends CandyListFragment<FragmentItemListBinding, Fra
     @SuppressLint("ValidFragment")
     public ItemFragment(@NonNull Map<String, Object> map, int columnCount, @NonNull List<DummyContent.DummyItem> values, boolean dividerItemDecoration) {
         super(map, columnCount, values, dividerItemDecoration);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+
+        filterDataSet(new Predicate<DummyContent.DummyItem>() {
+            @Override
+            public boolean apply(DummyContent.DummyItem input) {
+                return Integer.parseInt(input.id) % 2 == 0;
+            }
+        });
+
+        return v;
     }
 }
