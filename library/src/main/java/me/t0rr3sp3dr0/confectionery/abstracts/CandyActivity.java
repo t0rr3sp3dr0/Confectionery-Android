@@ -44,7 +44,6 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompatActivity implements OnFragmentInteractionListener, OnListFragmentInteractionListener {
     public final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Map<String, Object> map = new HashMap<>();
-    private T binding;
     @AnimRes
     private int enter = R.anim.slide_in_right;
     @AnimRes
@@ -53,6 +52,8 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     private int popEnter = R.anim.slide_in_left;
     @AnimRes
     private int popExit = R.anim.slide_out_right;
+    private boolean onBackPressedEnabled = true;
+    private T binding;
 
     /**
      * {@inheritDoc}
@@ -111,6 +112,16 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         for (int i = 0; iterator.hasNext(); i++)
             StringObjectMap.getInstance().put(String.format("%s$$%s", hash, keys[i] = iterator.next()), map.get(keys[i]));
         outState.putStringArray("this$$keys", keys);
+    }
+
+    /**
+     * Take care of popping the fragment back stack or finishing the activity
+     * as appropriate.
+     */
+    @Override
+    public void onBackPressed() {
+        if (onBackPressedEnabled)
+            super.onBackPressed();
     }
 
     /**
@@ -212,6 +223,10 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
             if (animated)
                 fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
             fragmentTransaction.replace(containerViewId, cloneFragment);
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
+                fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+            }
             fragmentTransaction.commit();
         } catch (InstantiationException | NullPointerException e) {
             e.printStackTrace();
@@ -222,5 +237,13 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
 
             Log.e("Confectionery", "It was not possible to restart your fragment!", e);
         }
+    }
+
+    public boolean isOnBackPressedEnabled() {
+        return onBackPressedEnabled;
+    }
+
+    public void setOnBackPressedEnabled(boolean onBackPressedEnabled) {
+        this.onBackPressedEnabled = onBackPressedEnabled;
     }
 }

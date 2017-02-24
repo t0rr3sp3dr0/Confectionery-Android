@@ -137,7 +137,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
             String dataSetHash = savedInstanceState.getString("this$$dataSet");
             savedInstanceState.remove("this$$dataSet");
-            mDataSet = (List<E>) StringObjectMap.getInstance().remove(String.format("%s$$dataSet", dataSetHash));
+            setDataSet((List<E>) StringObjectMap.getInstance().remove(String.format("%s$$dataSet", dataSetHash)));
 
             String predicateHash = savedInstanceState.getString("this$$predicate");
             savedInstanceState.remove("this$$predicate");
@@ -149,7 +149,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
             String dataSetHash = getArguments().getString("this$$dataSet");
             getArguments().remove("this$$dataSet");
-            mDataSet = (List<E>) StringObjectMap.getInstance().remove(String.format("%s$$dataSet", dataSetHash));
+            setDataSet((List<E>) StringObjectMap.getInstance().remove(String.format("%s$$dataSet", dataSetHash)));
 
             String predicateHash = getArguments().getString("this$$predicate");
             getArguments().remove("this$$predicate");
@@ -239,14 +239,23 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
         return mDataSet;
     }
 
-    public final void setDataSet(@NonNull List<E> values) {
-        this.mDataSet = values;
+    public final void setDataSet(@Nullable List<E> values) {
+        mDataSet = values != null ? values : new ArrayList<E>();
+
         filterDataSet(mPredicate);
     }
 
     @NonNull
     public final List<E> getFilteredDataSet() {
         return mFilteredDataSet;
+    }
+
+    public boolean isDividerItemDecoration() {
+        return dividerItemDecoration;
+    }
+
+    public void setDividerItemDecoration(boolean dividerItemDecoration) {
+        this.dividerItemDecoration = dividerItemDecoration;
     }
 
     public final void setupRecyclerView(@NonNull RecyclerView recyclerView) {
