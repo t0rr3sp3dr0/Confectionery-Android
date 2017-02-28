@@ -227,7 +227,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
                 fragmentManager.popBackStack();
                 fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
             }
-            fragmentTransaction.commit();
+            fragmentTransaction.commitAllowingStateLoss();
         } catch (InstantiationException | NullPointerException e) {
             e.printStackTrace();
 
