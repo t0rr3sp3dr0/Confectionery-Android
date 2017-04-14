@@ -10,6 +10,9 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +43,17 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment {
     private final Map<String, Object> map = new HashMap<>();
-    protected CandyActivity<? extends ViewDataBinding> mListener;
     private T binding;
+    @AnimRes
+    private int enter = R.anim.slide_in_right;
+    @AnimRes
+    private int exit = R.anim.slide_out_left;
+    @AnimRes
+    private int popEnter = R.anim.slide_in_left;
+    @AnimRes
+    private int popExit = R.anim.slide_out_right;
+    protected CandyActivity<? extends ViewDataBinding> mListener;
+    public FragmentManager childFragmentManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -137,6 +149,8 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
             mListener = (CandyActivity<? extends ViewDataBinding>) context;
         else
             throw new RuntimeException(context.toString() + " must extend CandyFragment");
+
+        childFragmentManager = getChildFragmentManager();
     }
 
     /**
@@ -222,5 +236,63 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
 
     public final void restartFragment(@IdRes int containerViewId, boolean animated) {
         ((CandyActivity) getActivity()).restartFragment(containerViewId, animated);
+    }
+
+    public final void setChildCustomAnimations(@AnimRes int enter, @AnimRes int exit, @AnimRes int popEnter, @AnimRes int popExit) {
+        this.enter = enter;
+        this.exit = exit;
+        this.popEnter = popEnter;
+        this.popExit = popExit;
+    }
+
+    public final void addChildFragment(@IdRes int containerViewId, Fragment fragment, boolean animated) {
+        FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+        if (animated)
+            fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+        fragmentTransaction.add(containerViewId, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public final void replaceChildFragment(@IdRes int containerViewId, Fragment fragment, boolean toBackStack, boolean animated) {
+        FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+        if (toBackStack)
+            fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+        else
+            childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        if (animated)
+            fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+        fragmentTransaction.replace(containerViewId, fragment);
+        fragmentTransaction.commit();
+    }
+
+    @SuppressWarnings("TryWithIdenticalCatches")
+    public final void restartChildFragment(@IdRes int containerViewId, boolean animated) {
+        try {
+            Fragment actualFragment = childFragmentManager.findFragmentById(containerViewId);
+
+            // Clone actualFragment
+            Fragment cloneFragment = actualFragment.getClass().newInstance();
+            Bundle args = new Bundle();
+            actualFragment.onSaveInstanceState(args);
+            cloneFragment.setArguments(args);
+
+            FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+            if (animated)
+                fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+            fragmentTransaction.replace(containerViewId, cloneFragment);
+            if (childFragmentManager.getBackStackEntryCount() > 0) {
+                childFragmentManager.popBackStack();
+                fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+            }
+            fragmentTransaction.commitAllowingStateLoss();
+        } catch (java.lang.InstantiationException | NullPointerException e) {
+            e.printStackTrace();
+
+            Log.e("Confectionery", "It was not possible to restart your fragment!", e);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+
+            Log.e("Confectionery", "It was not possible to restart your fragment!", e);
+        }
     }
 }
