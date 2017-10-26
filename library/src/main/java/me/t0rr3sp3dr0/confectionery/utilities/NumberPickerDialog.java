@@ -88,7 +88,7 @@ public class NumberPickerDialog extends AlertDialog implements DialogInterface.O
         setButton(BUTTON_POSITIVE, themeContext.getString(android.R.string.ok), this);
         setButton(BUTTON_NEGATIVE, themeContext.getString(android.R.string.cancel), this);
 
-        mNumberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
+        mNumberPicker = view.findViewById(R.id.numberPicker);
         mNumberPicker.setValue(value);
         mNumberPicker.setMinValue(minValue);
         mNumberPicker.setMaxValue(maxValue);

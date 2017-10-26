@@ -16,8 +16,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.google.common.base.CaseFormat;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -28,6 +26,7 @@ import me.t0rr3sp3dr0.confectionery.R;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.interfaces.OnListFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
+import me.t0rr3sp3dr0.confectionery.utilities.CaseFormat;
 
 /**
  * A blank activity.
@@ -69,7 +68,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
             final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
 
             String typeName = type.toString();
-            String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
+            String layoutName = CaseFormat.pascalToSnake(typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
             int layoutId = getResources().getIdentifier(layoutName, "layout", getPackageName());
             binding = DataBindingUtil.setContentView(this, layoutId);
         } catch (RuntimeException e) {

@@ -11,8 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.NumberPicker;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,27 +28,9 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
         super.onCreate(savedInstanceState);
         setSupportActionBar(getBinding().appBarMain.toolbar);
 
-        getBinding().appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-//                                startActivity(EmptyActivity.class, new HashMap<String, Object>());
-                                new NumberPickerDialog(MainActivity.this, new NumberPickerDialog.OnValueSetListener() {
-                                    @Override
-                                    public void onNumberSet(NumberPicker view, int value) {
-                                        Log.d("NumberPickerDialog", Integer.toString(value));
-                                    }
-                                }, 5, 0, Byte.MAX_VALUE).show();
-                            }
-                        }).show();
-            }
-        });
+        getBinding().appBarMain.fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", v -> new NumberPickerDialog(MainActivity.this, (view1, value) -> Log.d("NumberPickerDialog", Integer.toString(value)), 5, 0, Byte.MAX_VALUE).show()).show());
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, getBinding().drawerLayout, getBinding().appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, getBinding().drawerLayout, getBinding().appBarMain.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         getBinding().drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -92,7 +72,7 @@ public class MainActivity extends CandyActivity<ActivityMainBinding>
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(BasicActivity.class, new HashMap<String, Object>());
+            startActivity(BasicActivity.class, new HashMap<>());
             return true;
         }
 

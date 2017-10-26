@@ -16,8 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.common.base.CaseFormat;
-import com.google.common.base.Predicate;
+import com.android.internal.util.Predicate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -30,6 +29,7 @@ import java.util.Map;
 
 import me.t0rr3sp3dr0.confectionery.interfaces.OnListFragmentInteractionListener;
 import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
+import me.t0rr3sp3dr0.confectionery.utilities.CaseFormat;
 
 /**
  * A fragment representing a list of {@link E}.
@@ -54,12 +54,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
     private boolean dividerItemDecoration = true;
     private List<E> mDataSet = new ArrayList<>();
     private List<E> mFilteredDataSet = new ArrayList<>(mDataSet);
-    private Predicate<E> mPredicate = new Predicate<E>() {
-        @Override
-        public boolean apply(E input) {
-            return true;
-        }
-    };
+    private Predicate<E> mPredicate = input -> true;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -240,7 +235,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
     }
 
     public final void setDataSet(@Nullable List<E> values) {
-        mDataSet = values != null ? values : new ArrayList<E>();
+        mDataSet = values != null ? values : new ArrayList<>();
 
         filterDataSet(mPredicate);
     }
@@ -277,12 +272,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
     }
 
     public final void filterDataSet(@Nullable Predicate<E> predicate) {
-        mPredicate = predicate != null ? predicate : new Predicate<E>() {
-            @Override
-            public boolean apply(E input) {
-                return true;
-            }
-        };
+        mPredicate = predicate != null ? predicate : input -> true;
 
         mFilteredDataSet.clear();
 
@@ -316,7 +306,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
             final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[1];
 
             String typeName = type.toString();
-            String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
+            String layoutName = CaseFormat.pascalToSnake(typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
             int layoutId = parent.getResources().getIdentifier(layoutName, "layout", parent.getContext().getPackageName());
 
             T2 binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), layoutId, parent, false);
@@ -351,12 +341,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
                 this.binding = binding;
                 this.mView = binding.getRoot();
 
-                mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        CandyListFragment.this.onListFragmentInteraction(mItem);
-                    }
-                });
+                mView.setOnClickListener(v -> CandyListFragment.this.onListFragmentInteraction(mItem));
             }
 
             /**

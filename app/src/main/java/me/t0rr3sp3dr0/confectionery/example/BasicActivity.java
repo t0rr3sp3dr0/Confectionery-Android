@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.view.View;
 
 import me.t0rr3sp3dr0.confectionery.abstracts.CandyActivity;
 import me.t0rr3sp3dr0.confectionery.example.databinding.ActivityBasicBinding;
@@ -17,13 +16,8 @@ public class BasicActivity extends CandyActivity<ActivityBasicBinding> {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getBinding().fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        getBinding().fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_basic);
         if (fragment == null)

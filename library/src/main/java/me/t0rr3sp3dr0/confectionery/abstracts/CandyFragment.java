@@ -17,8 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.common.base.CaseFormat;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -27,6 +25,7 @@ import java.util.Map;
 
 import me.t0rr3sp3dr0.confectionery.R;
 import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
+import me.t0rr3sp3dr0.confectionery.utilities.CaseFormat;
 
 /**
  * A blank fragment.
@@ -43,6 +42,8 @@ import me.t0rr3sp3dr0.confectionery.singletons.StringObjectMap;
 @SuppressWarnings({"unused", "WeakerAccess"})
 public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment {
     private final Map<String, Object> map = new HashMap<>();
+    public FragmentManager childFragmentManager;
+    protected CandyActivity<? extends ViewDataBinding> mListener;
     private T binding;
     @AnimRes
     private int enter = R.anim.slide_in_right;
@@ -52,8 +53,6 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     private int popEnter = R.anim.slide_in_left;
     @AnimRes
     private int popExit = R.anim.slide_out_right;
-    protected CandyActivity<? extends ViewDataBinding> mListener;
-    public FragmentManager childFragmentManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -121,7 +120,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
             final Type type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
 
             String typeName = type.toString();
-            String layoutName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
+            String layoutName = CaseFormat.pascalToSnake(typeName.substring(typeName.lastIndexOf('.') + 1, typeName.length() - 7));
             int layoutId = getResources().getIdentifier(layoutName, "layout", getContext().getPackageName());
 
             // Inflate the layout for this fragment

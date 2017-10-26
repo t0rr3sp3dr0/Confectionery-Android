@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.common.base.Predicate;
-
 import java.util.List;
 import java.util.Map;
 
@@ -78,12 +76,7 @@ public class ItemFragment extends CandyListFragment<FragmentItemListBinding, Fra
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = super.onCreateView(inflater, container, savedInstanceState);
 
-        filterDataSet(new Predicate<DummyContent.DummyItem>() {
-            @Override
-            public boolean apply(DummyContent.DummyItem input) {
-                return Integer.parseInt(input.id) % 2 == 0;
-            }
-        });
+        filterDataSet(input -> Integer.parseInt(input.id) % 2 == 0);
 
         return v;
     }
