@@ -19,20 +19,26 @@ A powerful Android Library that simplifies a lot of common tasks in application 
 
 ### Requirements
 
+* Android Studio 3.0 or higher
 * API Level 17 or higher
+* Source Compatibility and Target Compatibility at 1.8 or higher
 * Data Binding enabled
 
 ### Build Environment
 
 To get started with Data Binding, download the library from the Support repository in the Android SDK manager.
 
-To configure your app to use data binding, add the `dataBinding` element to your `build.gradle` file in the app module.
+Set source compatibility and target compatibility to 1.8 by adding `compileOptions` to your `build.gradle` file in the app module. Then configure your app to use data binding, add the `dataBinding` element to your `build.gradle` file in the app module as well.
 
-Use the following code snippet to configure data binding:
+Use the following code snippet to set source compatibility and target compatibility and configure data binding:
 
 ```gradle
 android {
     ...
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     dataBinding {
         enabled true
     }
@@ -41,7 +47,7 @@ android {
 
 If you have an app module that depends on a library which uses data binding, your app module must configure data binding in its `build.gradle` file as well.
 
-Also, make sure you are using a compatible version of Android Studio. **Android Studio 1.3** and later provides support for data binding as described in [Android Studio Support for Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html#studio_support).
+Also, make sure you are using a compatible version of Android Studio. **Android Studio 1.3** and later provides support for data binding as described in [Android Studio Support for Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html#studio_support). **Android Studio 3.0** and later provides support for Java 8 language featureas as described in [Use Java 8 Language Features](https://developer.android.com/studio/write/java8-support.html).
 
 ### Add Dependency
 
@@ -50,7 +56,7 @@ In Android Studio, add the dependency to your app-level `build.gradle` file.
 ```gradle
 dependencies {
     ...
-    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.3'
+    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.4'
 }
 ```
 
@@ -70,7 +76,7 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.4-SNAPSHOT'
+    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.5-SNAPSHOT'
 }
 
 configurations.all {
@@ -342,5 +348,4 @@ For more information about `CandyActivity` see [Confectionery Sample Application
 
 ## Known Issues
 
-* Data Binding does not support Jack builds yet.
 * Custom Binding Class Names are currently not supported.
