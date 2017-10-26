@@ -50,7 +50,7 @@ In Android Studio, add the dependency to your app-level `build.gradle` file.
 ```gradle
 dependencies {
     ...
-    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.2'
+    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.3'
 }
 ```
 
@@ -70,7 +70,7 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.3-SNAPSHOT'
+    compile 'com.github.t0rr3sp3dr0:confectionery:0.0.4-SNAPSHOT'
 }
 
 configurations.all {
