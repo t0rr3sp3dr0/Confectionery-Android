@@ -103,7 +103,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        String hash = Integer.toString(System.identityHashCode(this));
+        String hash = Long.toString((long) (System.identityHashCode(this) * Math.random()));
         outState.putString("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -142,7 +142,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     public final void startActivity(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, @NonNull Map<String, Object> map) {
         Intent intent = new Intent(getApplicationContext(), clazz);
 
-        String hash = Integer.toString(System.identityHashCode(map));
+        String hash = Long.toString((long) (System.identityHashCode(map) * Math.random()));
         intent.putExtra("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -157,7 +157,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     public final void startActivityForResult(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, int requestCode, @NonNull Map<String, Object> map) {
         Intent intent = new Intent(getApplicationContext(), clazz);
 
-        String hash = Integer.toString(System.identityHashCode(map));
+        String hash = Long.toString((long) (System.identityHashCode(map) * Math.random()));
         intent.putExtra("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -198,7 +198,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
     public final void replaceFragment(@IdRes int containerViewId, Fragment fragment, boolean toBackStack, boolean animated) {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         if (toBackStack)
-            fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+            fragmentTransaction.addToBackStack(Long.toString((long) (System.identityHashCode(this) * Math.random())));
         else
             fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         if (animated)
@@ -224,7 +224,7 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
             fragmentTransaction.replace(containerViewId, cloneFragment);
             if (fragmentManager.getBackStackEntryCount() > 0) {
                 fragmentManager.popBackStack();
-                fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+                fragmentTransaction.addToBackStack(Long.toString((long) (System.identityHashCode(this) * Math.random())));
             }
             fragmentTransaction.commitAllowingStateLoss();
         } catch (InstantiationException | NullPointerException e) {

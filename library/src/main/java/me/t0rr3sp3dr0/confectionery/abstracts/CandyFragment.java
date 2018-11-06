@@ -70,7 +70,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     public CandyFragment(@NonNull Map<String, Object> map) {
         Bundle args = new Bundle();
 
-        String hash = Integer.toString(System.identityHashCode(map));
+        String hash = Long.toString((long) (System.identityHashCode(map) * Math.random()));
         args.putString("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -171,7 +171,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        String hash = Integer.toString(System.identityHashCode(this));
+        String hash = Long.toString((long) (System.identityHashCode(this) * Math.random()));
         outState.putString("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -194,7 +194,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     public final void startActivity(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, @NonNull Map<String, Object> map) {
         Intent intent = new Intent(getContext(), clazz);
 
-        String hash = Integer.toString(System.identityHashCode(map));
+        String hash = Long.toString((long) (System.identityHashCode(map) * Math.random()));
         intent.putExtra("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -209,7 +209,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     public final void startActivityForResult(@NonNull Class<? extends CandyActivity<? extends ViewDataBinding>> clazz, int requestCode, @NonNull Map<String, Object> map) {
         Intent intent = new Intent(getContext(), clazz);
 
-        String hash = Integer.toString(System.identityHashCode(map));
+        String hash = Long.toString((long) (System.identityHashCode(map) * Math.random()));
         intent.putExtra("this$$hash", hash);
 
         String[] keys = new String[map.size()];
@@ -255,7 +255,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     public final void replaceChildFragment(@IdRes int containerViewId, Fragment fragment, boolean toBackStack, boolean animated) {
         FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
         if (toBackStack)
-            fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+            fragmentTransaction.addToBackStack(Long.toString((long) (System.identityHashCode(this) * Math.random())));
         else
             childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         if (animated)
@@ -281,7 +281,7 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
             fragmentTransaction.replace(containerViewId, cloneFragment);
             if (childFragmentManager.getBackStackEntryCount() > 0) {
                 childFragmentManager.popBackStack();
-                fragmentTransaction.addToBackStack(Integer.toString(System.identityHashCode(this)));
+                fragmentTransaction.addToBackStack(Long.toString((long) (System.identityHashCode(this) * Math.random())));
             }
             fragmentTransaction.commitAllowingStateLoss();
         } catch (java.lang.InstantiationException | NullPointerException e) {

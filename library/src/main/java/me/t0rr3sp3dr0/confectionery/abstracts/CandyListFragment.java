@@ -88,7 +88,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
         args.putInt(ARG_COLUMN_COUNT, columnCount);
 
-        String hash = Integer.toString(System.identityHashCode(values));
+        String hash = Long.toString((long) (System.identityHashCode(values) * Math.random()));
         args.putString("this$$dataSet", hash);
         StringObjectMap.getInstance().put(String.format("%s$$dataSet", hash), values);
 
@@ -112,7 +112,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
         getArguments().putInt(ARG_COLUMN_COUNT, columnCount);
 
-        String hash = Integer.toString(System.identityHashCode(values));
+        String hash = Long.toString((long) (System.identityHashCode(values) * Math.random()));
         getArguments().putString("this$$dataSet", hash);
         StringObjectMap.getInstance().put(String.format("%s$$dataSet", hash), values);
 
@@ -181,11 +181,11 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
 
         outState.putInt(ARG_COLUMN_COUNT, mColumnCount);
 
-        String dataSetHash = Integer.toString(System.identityHashCode(mDataSet));
+        String dataSetHash = Long.toString((long) (System.identityHashCode(mDataSet) * Math.random()));
         outState.putString("this$$dataSet", dataSetHash);
         StringObjectMap.getInstance().put(String.format("%s$$dataSet", dataSetHash), mDataSet);
 
-        String predicateHash = Integer.toString(System.identityHashCode(mPredicate));
+        String predicateHash = Long.toString((long) (System.identityHashCode(mPredicate) * Math.random()));
         outState.putString("this$$predicate", predicateHash);
         StringObjectMap.getInstance().put(String.format("%s$$predicate", predicateHash), mPredicate);
 
