@@ -17,6 +17,9 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
 
+import groovy.swing.SwingBuilder
+import org.gradle.plugins.signing.Sign
+
 def isReleaseBuild() {
     return !VERSION_NAME.contains("SNAPSHOT")
 }
@@ -111,5 +114,61 @@ afterEvaluate { project ->
                 }
             }
         }
+    }
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+    if (taskGraph.allTasks.any { it instanceof Sign }) {
+        def file = ext."signing.secretKeyRingFile"
+        def id = ext."signing.keyId"
+        def password = ext."signing.password"
+
+        Console console = System.console()
+        if (console != null) {
+            console.printf "\n\nWe have to sign some things in this build." +
+                    "\n\nPlease enter your signing details.\n\n"
+
+            def _file = console.readLine("PGP Secret Key Ring File (absolute path): ")
+            if (!_file.empty)
+                file = _file
+
+            def _id = console.readLine("PGP Key Id: ")
+            if (!_id.empty)
+                id = _id
+
+            def _password = console.readPassword("PGP Private Key Password: ")
+            if (!_password.empty)
+                password = _password
+
+            console.printf "\nThanks.\n\n"
+        } else {
+            System.setProperty("java.awt.headless", "false")
+            new SwingBuilder().edt {
+                dialog(modal: true, title: 'Please enter your signing details', alwaysOnTop: true, locationRelativeTo: null, pack: true, resizable: false, show: true) {
+                    vbox {
+                        label(text: "PGP Secret Key Ring File (absolute path): ")
+                        def fileField = textField file
+
+                        label(text: "PGP Key Id: ")
+                        def idField = textField id
+
+                        label(text: "PGP Private Key Password: ")
+                        def passwordField = passwordField password
+
+                        button(defaultButton: true, text: 'OK', actionPerformed: {
+                            file = fileField.text
+                            id = idField.text
+                            password = new String(passwordField.password)
+
+                            dispose()
+                        })
+                    }
+                }
+            }
+        }
+
+        allprojects { ext."signing.secretKeyRingFile" = file }
+        allprojects { ext."signing.keyId" = id }
+        allprojects { ext."signing.password" = password }
     }
 }
