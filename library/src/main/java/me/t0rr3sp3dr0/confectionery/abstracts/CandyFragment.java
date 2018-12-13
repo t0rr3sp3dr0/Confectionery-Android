@@ -89,19 +89,12 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            String hash = savedInstanceState.getString("this$$hash");
-            savedInstanceState.remove("this$$hash");
-            String[] keys = savedInstanceState.getStringArray("this$$keys");
-            savedInstanceState.remove("this$$keys");
-            if (keys != null)
-                for (String key : keys)
-                    map.put(key, StringObjectMap.getInstance().remove(String.format("%s$$%s", hash, key)));
-        } else if (getArguments() != null) {
-            String hash = getArguments().getString("this$$hash");
-            getArguments().remove("this$$hash");
-            String[] keys = getArguments().getStringArray("this$$keys");
-            getArguments().remove("this$$keys");
+        Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
+        if (bundle != null) {
+            String hash = bundle.getString("this$$hash");
+            bundle.remove("this$$hash");
+            String[] keys = bundle.getStringArray("this$$keys");
+            bundle.remove("this$$keys");
             if (keys != null)
                 for (String key : keys)
                     map.put(key, StringObjectMap.getInstance().remove(String.format("%s$$%s", hash, key)));
@@ -289,6 +282,23 @@ public abstract class CandyFragment<T extends ViewDataBinding> extends Fragment 
 
             Log.e("Confectionery", "It was not possible to restart your fragment!", e);
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+
+            Log.e("Confectionery", "It was not possible to restart your fragment!", e);
+        }
+    }
+
+    public final void reloadChildFragment(@IdRes int containerViewId, boolean animated) {
+        try {
+            Fragment actualFragment = childFragmentManager.findFragmentById(containerViewId);
+
+            FragmentTransaction fragmentTransaction = childFragmentManager.beginTransaction();
+            if (animated)
+                fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+            fragmentTransaction.detach(actualFragment);
+            fragmentTransaction.attach(actualFragment);
+            fragmentTransaction.commitAllowingStateLoss();
+        } catch (NullPointerException e) {
             e.printStackTrace();
 
             Log.e("Confectionery", "It was not possible to restart your fragment!", e);

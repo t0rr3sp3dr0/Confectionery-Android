@@ -238,6 +238,23 @@ public abstract class CandyActivity<T extends ViewDataBinding> extends AppCompat
         }
     }
 
+    public final void reloadFragment(@IdRes int containerViewId, boolean animated) {
+        try {
+            Fragment actualFragment = fragmentManager.findFragmentById(containerViewId);
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            if (animated)
+                fragmentTransaction.setCustomAnimations(enter, exit, popEnter, popExit);
+            fragmentTransaction.detach(actualFragment);
+            fragmentTransaction.attach(actualFragment);
+            fragmentTransaction.commitAllowingStateLoss();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+
+            Log.e("Confectionery", "It was not possible to restart your fragment!", e);
+        }
+    }
+
     public boolean isOnBackPressedEnabled() {
         return onBackPressedEnabled;
     }
