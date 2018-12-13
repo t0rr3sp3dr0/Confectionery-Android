@@ -282,6 +282,7 @@ public abstract class CandyListFragment<T1 extends ViewDataBinding, T2 extends V
     }
 
     public final void notifyDataSetChanged(RecyclerView recyclerView) {
+        setDataSet(getDataSet());
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
