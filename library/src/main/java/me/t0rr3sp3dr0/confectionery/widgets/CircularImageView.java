@@ -49,15 +49,49 @@ public class CircularImageView extends AppCompatImageView {
     protected void onDraw(Canvas canvas) {
         Drawable drawable = getDrawable();
 
-        if (drawable == null || getWidth() == 0 || getHeight() == 0)
+        int paddingTop = getPaddingTop();
+        int paddingEnd = getPaddingRight();
+        int paddingStart = getPaddingLeft();
+        int paddingBottom = getPaddingBottom();
+
+        int width = getWidth();
+        int height = getHeight();
+
+        int w = width - paddingStart - paddingEnd;
+        int h = height - paddingTop - paddingBottom;
+
+        if (drawable == null || w == 0 || h == 0)
             return;
 
-        canvas.drawBitmap(getRoundedBitmap(((BitmapDrawable) drawable).getBitmap().copy(Config.ARGB_8888, true)), 0, 0, null);
+        canvas.drawBitmap(getRoundedBitmap(getBitmap(drawable).copy(Config.ARGB_8888, true)), paddingStart, paddingTop, null);
+    }
+
+    private Bitmap getBitmap(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if(bitmapDrawable.getBitmap() != null)
+                return bitmapDrawable.getBitmap();
+        }
+
+        final Bitmap bitmap = Bitmap.createBitmap(Math.max(drawable.getIntrinsicWidth(), 1), Math.max(drawable.getIntrinsicHeight(), 1), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 
     private Bitmap getRoundedBitmap(Bitmap bitmap) {
+        int paddingTop = getPaddingTop();
+        int paddingEnd = getPaddingRight();
+        int paddingStart = getPaddingLeft();
+        int paddingBottom = getPaddingBottom();
+
         int width = getWidth();
         int height = getHeight();
+
+        int w = width - paddingStart - paddingEnd;
+        int h = height - paddingTop - paddingBottom;
 
         int bitmapWidth = bitmap.getWidth();
         int bitmapHeight = bitmap.getHeight();
@@ -66,17 +100,17 @@ public class CircularImageView extends AppCompatImageView {
         int max = Math.max(bitmapWidth, bitmapHeight);
 
         bitmap = Bitmap.createBitmap(bitmap, bitmapWidth <= bitmapHeight ? 0 : max / 2 - min / 2, bitmapWidth >= bitmapHeight ? 0 : max / 2 - min / 2, min, min);
-        bitmap = Bitmap.createScaledBitmap(bitmap, Math.min(width, height), Math.min(width, height), false);
+        bitmap = Bitmap.createScaledBitmap(bitmap, Math.min(w, h), Math.min(w, h), false);
 
-        final Bitmap output = Bitmap.createBitmap(width, height, Config.ARGB_8888);
+        final Bitmap output = Bitmap.createBitmap(w, h, Config.ARGB_8888);
         final Canvas canvas = new Canvas(output);
         final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, width, height);
+        final Rect rect = new Rect(0, 0, w, h);
 
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);
         paint.setDither(true);
-        canvas.drawCircle(width / 2f, height / 2f, Math.min(width, height) / 2f, paint);
+        canvas.drawCircle(w / 2f - (w > h ? (w - h) / 2 : 0), h / 2f - (h > w ? (h - w) / 2 : 0), Math.min(w, h) / 2f, paint);
 
         paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
